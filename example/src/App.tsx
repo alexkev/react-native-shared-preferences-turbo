@@ -1,12 +1,30 @@
-import { Text, View, StyleSheet } from 'react-native';
-import { multiply } from 'react-native-shared-preferences-turbo';
+import { useState } from 'react';
+import { Text, View, StyleSheet, Button } from 'react-native';
+import { setItem, getItem } from 'react-native-shared-preferences-turbo';
 
-const result = multiply(3, 7);
+const value = getItem('key');
 
 export default function App() {
+  const [displayValue, setDisplayValue] = useState<string | null>(value);
+
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Text>Result:</Text>
+      <Text>{displayValue}</Text>
+      <Button
+        title="+"
+        onPress={() => {
+          console.log(
+            '%cexample/src/App.tsx:14 value',
+            'color: #007acc;',
+            value
+          );
+
+          const newValue = Number(displayValue || 0) + 1;
+          setItem('key', newValue.toString());
+          setDisplayValue(newValue.toString());
+        }}
+      />
     </View>
   );
 }

@@ -1,7 +1,10 @@
 const path = require('path');
 const { getDefaultConfig } = require('@react-native/metro-config');
-const { withMetroConfig } = require('react-native-monorepo-config');
 
+// Replace the require with a dynamic import setup
+let withMetroConfigPromise;
+
+// Set up the root path
 const root = path.resolve(__dirname, '..');
 
 /**
@@ -10,7 +13,21 @@ const root = path.resolve(__dirname, '..');
  *
  * @type {import('metro-config').MetroConfig}
  */
-module.exports = withMetroConfig(getDefaultConfig(__dirname), {
-  root,
-  dirname: __dirname,
-});
+const config = getDefaultConfig(__dirname);
+
+// Export a function that returns a promise resolving to the config
+module.exports = async () => {
+  // Dynamically import the ES module
+  if (!withMetroConfigPromise) {
+    withMetroConfigPromise = import('react-native-monorepo-config').then(
+      ({ withMetroConfig }) => {
+        return withMetroConfig(config, {
+          root,
+          dirname: __dirname,
+        });
+      }
+    );
+  }
+
+  return withMetroConfigPromise;
+};
