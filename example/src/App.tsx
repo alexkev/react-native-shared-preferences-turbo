@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
-import { setItem, getItem } from 'react-native-shared-preferences-turbo';
+import { Text, View, StyleSheet, Button, Platform } from 'react-native';
+import { setItem, getItem, clear } from 'react-native-shared-preferences-turbo';
 
 const value = getItem('key');
 
@@ -10,7 +10,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text>Result:</Text>
-      <Text>{displayValue}</Text>
+      <Text>{displayValue ?? 0}</Text>
       <Button
         title="+"
         onPress={() => {
@@ -25,6 +25,15 @@ export default function App() {
           setDisplayValue(newValue.toString());
         }}
       />
+      {Platform.OS === 'android' && (
+        <Button
+          title="clear"
+          onPress={() => {
+            clear();
+            setDisplayValue(null);
+          }}
+        />
+      )}
     </View>
   );
 }

@@ -11,4 +11,4 @@ export interface Spec extends TurboModule {
   // removeItem(key: string): void;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>('SharedPreferencesTurbo');
+export default TurboModuleRegistry.get<Spec>('SharedPreferencesTurbo');

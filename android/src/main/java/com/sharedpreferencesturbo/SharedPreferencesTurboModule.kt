@@ -14,7 +14,13 @@ class SharedPreferencesTurboModule(reactContext: ReactApplicationContext) :
 
   // Example method
   // See https://reactnative.dev/docs/native-modules-android
-  private val sharedName = "RNSharedPreferences"
+  private val sharedName: String by lazy {
+    val metadata = reactContext.applicationContext.packageManager
+      .getApplicationInfo(reactContext.packageName, android.content.pm.PackageManager.GET_META_DATA)
+      .metaData
+    
+    metadata?.getString("com.sharedpreferencesturbo.PREFERENCES_NAME") ?: "RNSharedPreferences"
+  }
 
   private val sharedPreferences by lazy {
     reactContext.getSharedPreferences(sharedName, Context.MODE_PRIVATE)
